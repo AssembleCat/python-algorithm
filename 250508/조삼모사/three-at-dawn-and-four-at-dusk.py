@@ -9,7 +9,6 @@ work_matrix = [list(map(int, input().split())) for _ in range(N)]
 work_nums = [x for x in range(1, N+1)]
 visited = [False] * N
 work_combo = set()
-target_size = len(work_matrix)
 
 def get_combinations(start, elements):
     if len(elements) == N // 2:
