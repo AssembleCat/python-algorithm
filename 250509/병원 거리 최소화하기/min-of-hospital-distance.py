@@ -13,12 +13,13 @@ for i in range(n):
         elif mat[i][j] == 1:
             humans.append([i, j])
 visited = [False for _ in range(len(hospital))]
+done = set()
 minimum = 10000000
 
 def calculate_distance(comb):
     global minimum 
-    #print(f"{comb} 조합 계산")
     distance = 0
+    #print(f"{comb} 거리연산")
     for human in humans:
         shortest = 200
         for h in comb:
@@ -30,7 +31,8 @@ def calculate_distance(comb):
         minimum = distance
 
 def find_h_comb(start, comb):
-    if len(comb) == m:
+    if len(comb) == m and tuple(sorted(comb)) not in done:
+        done.add(tuple(sorted(comb)))
         calculate_distance(comb)
         return
     
