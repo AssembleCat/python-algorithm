@@ -1,46 +1,41 @@
 """
-전체 병원 갯수중 m개를 남기는 조합을 생성
-각 사람별로 가장 가까운 병원거리를 연산 -> 전체 병원거리 연산
+조합을 생성하고 저장해두는 것은 케이스 숫자가 클때 불리함. 생성한 당시 결과값을 추출할 수 있으면 조합을 저장하지 않는 방향으로 가야함.
+남겨둘 병원의 조합을 생성하고 사람마다 최소거리를 구하는 컨셉을 맞았는데 시간 복잡도를 고려하지않았음.
 """
-
 n, m = map(int, input().split())
 mat = [list(map(int, input().split())) for _ in range(n)]
-hospital, humans = [], []
+
+hospital = []
+humans = []
+
 for i in range(n):
     for j in range(n):
         if mat[i][j] == 2:
-            hospital.append([i, j])
+            hospital.append((i, j))
         elif mat[i][j] == 1:
-            humans.append([i, j])
-visited = [False for _ in range(len(hospital))]
-done = set()
-minimum = 10000000
+            humans.append((i, j))
 
-def calculate_distance(comb):
-    global minimum 
-    distance = 0
-    #print(f"{comb} 거리연산")
-    for human in humans:
-        shortest = 200
-        for h in comb:
-            if abs(human[0] - hospital[h][0]) + abs(human[1] - hospital[h][1]) < shortest:
-                shortest = abs(human[0] - hospital[h][0]) + abs(human[1] - hospital[h][1])
-        distance += shortest
+min_total_distance = float('inf')
 
-    if distance < minimum:
-        minimum = distance
+def calculate_distance(selected):
+    total = 0
+    for hx, hy in humans:
+        min_dist = float('inf')
+        for cx, cy in selected:
+            min_dist = min(min_dist, abs(hx - cx) + abs(hy - cy))
+        total += min_dist
+    return total
 
-def find_h_comb(start, comb):
-    if len(comb) == m and tuple(sorted(comb)) not in done:
-        done.add(tuple(sorted(comb)))
-        calculate_distance(comb)
+def dfs(start, comb):
+    global min_total_distance
+
+    if len(comb) == m:
+        dist = calculate_distance(comb)
+        min_total_distance = min(min_total_distance, dist)
         return
-    
-    for i in range(start, len(visited)):
-        if not visited[i]:
-            visited[i] = True
-            find_h_comb(start+1, comb + [i])
-            visited[i] = False
-    
-find_h_comb(0, [])
-print(minimum)
+
+    for i in range(start, len(hospital)):
+        dfs(i + 1, comb + [hospital[i]])
+
+dfs(0, [])
+print(min_total_distance)
