@@ -2,7 +2,7 @@ n = int(input())
 numbers = list(map(int, input().split()))
 plus, minus, multi = map(int, input().split())
 operations = ['+'] * plus + ['-'] * minus + ['*'] * multi
-minimum, maximum = 100000000, -100000000
+minimum, maximum = 1000000000, -1000000000
 
 def calculate(op_combo):
     global minimum, maximum
