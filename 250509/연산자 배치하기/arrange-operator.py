@@ -41,5 +41,4 @@ operations_combos = get_combinations()
 for operations_combo in operations_combos:
     calculate(operations_combo)
 
-print(minimum)
-print(maximum)
+print(minimum, maximum)
