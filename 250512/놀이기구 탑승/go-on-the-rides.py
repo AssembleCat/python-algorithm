@@ -68,12 +68,8 @@ def calculate():
                 score += 0
             elif friend_count == 1:
                 score += 1
-            elif friend_count == 2:
-                score += 10
-            elif friend_count == 3:
-                score += 100
-            elif friend_count == 4:
-                score += 1000
+            else:
+                score += 10 ** (friend_count - 1)
     return score
 
 for student in seq:
