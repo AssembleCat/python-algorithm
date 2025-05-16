@@ -42,7 +42,7 @@ class Board:
 
         for i in range(5):
             for j in range(5):
-                if visited[i][j] or self.grid[i][j] == -1:
+                if visited[i][j]:
                     continue
 
                 queue = deque()
@@ -78,7 +78,7 @@ class Board:
                     self.grid[i][j] = -1
 
         return score
-        
+
     def fill_grid(self, relics):
         for j in range(5):
             for i in range(4, -1, -1):
@@ -100,8 +100,8 @@ def simulation():
         max_board = None
 
         for r in range(1, 4):
-            for i in range(1, 4):  # 중심점을 i, j로 두는 9가지 경우
-                for j in range(1, 4):  # 회전을 1~3 몇번 실행할 것인지 3가지 경우
+            for j in range(1, 4):  # 중심점을 i, j로 두는 9가지 경우
+                for i in range(1, 4):  # 회전을 1~3 몇번 실행할 것인지 3가지 경우
                     rotated = board.rotate(i, j, r)
                     score = rotated.calculate_score()
 
@@ -124,6 +124,5 @@ def simulation():
             max_score += chained_score
 
         print(max_score, end=" ")
-
 
 simulation()
