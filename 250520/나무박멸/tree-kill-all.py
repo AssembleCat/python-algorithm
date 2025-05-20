@@ -108,6 +108,9 @@ class Board():
                         max_tree_killed = tree_killed
                         max_killed_spot = killed_positions
                         kill_spot = (i, j)
+                        
+        if kill_spot is None:
+            return max_tree_killed
         
         self.grid[kill_spot[0]][kill_spot[1]] = 0
         self.killing_grid[kill_spot[0]][kill_spot[1]] = self.c + 1
