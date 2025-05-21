@@ -15,17 +15,17 @@ class Board():
         n = len(self.grid)
         new_grid = [[0 for _ in range(n)] for _ in range(n)]
         
-        group_size, half_size = (1 << level), level
+        group_size, half_size = 1 << level, 1 << (level - 1)
         for i in range(0, n, group_size):
             for j in range(0, n, group_size):
                 self.rotate_group(new_grid, i, j, half_size, 0)
                 self.rotate_group(new_grid, i, j + half_size, half_size, 1)
-                self.rotate_group(new_grid, i + half_size, j + half_size, half_size, 2)
-                self.rotate_group(new_grid, i + half_size, j, half_size, 3)
+                self.rotate_group(new_grid, i + half_size, j + half_size, half_size, 3)
+                self.rotate_group(new_grid, i + half_size, j, half_size, 2)
         self.grid = new_grid
 
     def rotate_group(self, new_grid, x, y, half_size, direction):
-        dx, dy = [0, 1, 0, -1], [1, 0, -1, 0] # 우, 하, 좌, 사
+        dx, dy = [0, 1, -1, 0], [1, 0, 0, -1]
         for i in range(x, x + half_size):
             for j in range(y, y + half_size):
                 #print(f"rotations in {i, j}, direction: {direction}")
