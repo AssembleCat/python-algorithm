@@ -25,6 +25,8 @@ class Board():
         self.grid = new_grid
 
     def rotate_group(self, new_grid, x, y, half_size, direction):
+        # 이런 미친 사실을 모르고 있었다니, 시계방향으로 움직이니까 4분할한 그룹이 좌상, 우상, 우하, 좌하 이렇게 접근할거라 생각함.
+        # 하지만 x를 먼저, y를 나중에 접근하니까 좌상, 우상, 좌하, 우하 이런식인데 완전히 잘못 접근했음. 인덱스의 접근순서를 기억하자. 
         dx, dy = [0, 1, -1, 0], [1, 0, 0, -1]
         for i in range(x, x + half_size):
             for j in range(y, y + half_size):
