@@ -1,6 +1,9 @@
 """
 좌표가 (1, 1) 부터 시작됨 입력값 스케일링 필요
 연쇄적인 움직임이 있음! Queue에 움직임을 순차적으로 넣어서 구현
+
+특정 동작으로 인해 조건에 따라 다른 오브젝트들도 연쇄적으로 이동해야한다면 Queue를 가장 먼저 떠올리자
+일일히 구현하지않고 조건과 행동만 해당 단계에서 정의하면 구현이 어렵지않다!
 """
 import copy
 from collections import deque
@@ -23,7 +26,6 @@ def simulate_move(knight_idx, direction):
     while q:
         k_idx, dir = q.popleft()
         r, c, h, w, k = knights[k_idx]
-        #print(f"{k_idx}번 이동({direction})")
         if k < 1:
             continue
         # r, c가 direction 방향으로 움직였을때, 범위 밖으로 나가는지(1), 움직인 곳에 벽이 존재하는지(2) 검사
@@ -31,10 +33,8 @@ def simulate_move(knight_idx, direction):
         for i in range(nr, nr + h): 
             for j in range(nc, nc + w):
                 if not in_range(i, j):
-                    #print(f"{i, j} 칸이 범위를 벗어남. 이동불가능")
                     return False
                 if grid[i][j] == 2:
-                    #print(f"{i, j} 칸은 벽, 이동불가능")
                     return False
         # 다른 기사들이 움직인 칸에 존재하는지 확인, 있다면 해당 기사를 움직여야함.
         another_knights = [knight for knight in knights if knight != knights[k_idx]]
@@ -46,7 +46,6 @@ def simulate_move(knight_idx, direction):
                 for aj in range(ac, ac+aw): # 0
                     if nr <= ai < nr + h and nc <= aj < nc + w:
                         if (knights.index(a_knight), direction) not in q:
-                            #print(f"{k_idx}에 의해 밀림 연쇄이동({knights.index(a_knight)})")
                             q.append((knights.index(a_knight), direction))
     return True
 
@@ -101,11 +100,9 @@ for idx, knight in enumerate(knights):
     r, c, h, w, k = knight
     knights[idx] = [r-1, c-1, h, w, k]
 
-#print(knights)
 for _ in range(Q):
     num, dir = map(int, input().split())
     if simulate_move(num - 1, dir): # 기사번호가 1부터 주어지므로 index에 맞게 1을 빼서 전달함.
         move(num-1, dir)
-    #print(knights)
 
 print(total_damage())
