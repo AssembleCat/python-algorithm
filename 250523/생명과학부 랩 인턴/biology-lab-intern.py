@@ -1,24 +1,25 @@
+from collections import defaultdict
+
 n, m, k = map(int, input().split())
 # x, y - 위치, s - 거리, d - 이동 방향, b - 크기  
 dusts = [list(map(int, input().split())) for _ in range(k)]
-dusts.sort(lambda x: (x[1], x[0])) # 열 순으로 정렬 
 total_collect = 0
 
 for idx, dust in enumerate(dusts):
     x, y, s, d, b = dust
     dusts[idx] = [x-1, y-1, s, d-1, b]
 
-print(dusts)
-
 # 열별로 탐색 
 def collect(j):
-    global total_collect
+    global dusts, total_collect
     # j - 검사 대상 열
+
+    dusts.sort(lambda x: (x[1], x[0])) 
     for i in range(n):
         for dust in dusts:
             x, y, _, _, b = dust
             if (i, j) == (x, y):
-                print(f"find {i, j} collect {b}")
+                #print(f"find {i, j} collect {b}")
                 total_collect += b
                 dusts.remove(dust)
                 return
@@ -41,26 +42,37 @@ def cover_range(x, y, direction, speed):
                 direction += 1
             else:
                 direction -= 1
-    return x, y
+    return x, y, direction
 
 # 공팡이 이동
 def move():
-    print(dusts)
     for idx, dust in enumerate(dusts):
         
         x, y, s, d, b = dust
-        nx, ny = cover_range(x, y, d, s)
-        print(f"dust({x, y} move to {nx, ny})")
-        dusts[idx] = (nx, ny, s, d, b)
+        nx, ny, nd = cover_range(x, y, d, s)
+        #print(f"dust({x, y} move to {nx, ny})")
+        dusts[idx] = (nx, ny, s, nd, b)
 
 # 이동 후 충돌 구현      
 def check_collision():
-    for i in range(n):
-        for j in range(m):
-            curr_dust = []
-            for dust in dusts:
-                x, y, 
+    global dusts
+    new_dusts_map = defaultdict(list)
+    for dust in dusts:
+        x, y, _, _, _ = dust
+        new_dusts_map[(x, y)].append(dust)
+    
+    new_dusts = []
+    for cell_dusts in new_dusts_map.values():
+        #if len(cell_dusts) > 1:
+            #print(f"곰팡이 포식 발생({cell_dusts})")
+        cell_dusts.sort(lambda x: -x[4]) # 크기를 역순으로 정렬 
+        new_dusts.append(cell_dusts[0])
+    
+    dusts = new_dusts                                
     
 for i in range(m):
     collect(i)
     move()
+    check_collision()
+
+print(total_collect)
