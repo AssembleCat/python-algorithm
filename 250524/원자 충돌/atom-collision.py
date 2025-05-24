@@ -79,6 +79,7 @@ def collision():
             continue
         if len(moved_atom) == 1: # 원자가 하나만 있으면 그대로 추가 
             new_atoms.extend(moved_atom)
+            continue
 
         created_atoms = create_new_atoms(moved_atom)
         if len(created_atoms) > 0:
