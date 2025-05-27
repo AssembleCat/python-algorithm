@@ -42,13 +42,11 @@ def move(player_idx):
 def change_gun(player_idx):
     player = players[player_idx]
     x, y, d, s = player
-    #print(f"플레이어({player_idx + 1}) {x, y}에서 총 교체 ")
     
     target_guns = guns[x][y]
     if player_gun[player_idx] != 0:
         target_guns.append(player_gun[player_idx])
     
-    #print(f"획득가능 대상 총: {target_guns}")
     selected = max(target_guns)
     target_guns.remove(selected)
 
@@ -56,9 +54,6 @@ def change_gun(player_idx):
     if len(target_guns) == 0:
         target_guns.append(0)
     guns[x][y] = target_guns
-
-    #print(f"최종 획득 총: {selected}")
-    #print(f"바닥에 놓인 총: {target_guns}")
     
 def move_loser(loser_idx):
     x, y, d, s = players[loser_idx]
@@ -77,19 +72,16 @@ def move_loser(loser_idx):
             players[loser_idx] = [nx, ny, direction, s]
             break
     
-    #print(f"패자 움직임 상태: {players[loser_idx]}")
     # 주울 수 있는 총 줍기 
     change_gun(loser_idx)
 
 
 def move_winner(winner_idx):
-    #print(f"승자({winner_idx}) 움직임")
     change_gun(winner_idx)
 
 def fight(player_idx, other_idx):
     player, other = players[player_idx], players[other_idx]
     p_power, other_power = player_gun[player_idx] + player[3], player_gun[other_idx] + other[3]
-    #print(f"결투 발생 {player_idx}번 player({p_power}), {other_idx}번 other({other_power})") 
     
     # 승자 패자 결정 
     winner, loser = None, None    
