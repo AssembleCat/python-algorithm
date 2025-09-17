@@ -1,23 +1,55 @@
-"""
-4개의 톱니바퀴가 입력됨.
-오른쪽 - 3번째, 왼쪽 - 7번째 극성이 다른 톱니바퀴에 영향을 줌.
-각 배열(톱니바퀴)를 회전시키는 동작 함수를 구성(배열, 방향)
-매 회전마다 주변 극성을 확인해서 회전시킬 톱니바퀴 번호와 방향을 선정함.
-큐를 생성해서 해당 큐에 회전시킬 이벤트를 입력함.
-최종 점수는 1번째 극성여부에 따름.
-0 = N극, 1 = S극
-방향 1 - 시계, -1 - 반시계
-"""
 from collections import deque
 
-wheel = [input() for _ in range(4)]
-N = int(input())
-rotation_event = deque()
+wheels = [input() for _ in range(4)]
+K = int(input())
 
 
-def do_rotation(effect_by, direction, ):
+def print_wheels():
+    print('-' * 20)
+    for wheel in wheels:
+        print(*wheel)
 
 
-for _ in range(N):
-    wheel_num, rotation = map(int, input().split())
+def rotate_wheel(num, direction):
+    global wheels
+    if direction == 1:  # 시계방향
+        wheels[num] = wheels[num][-1] + wheels[num][:-1]
+    else:  # 반시계
+        wheels[num] = wheels[num][1:] + wheels[num][0]
 
+
+def get_score():
+    score = 0
+    for i, wheel in enumerate(wheels):
+        if wheel[0] == '1':  # 12시가 s극임.
+            score += (1 << i)
+
+    return score
+
+
+for _ in range(K):
+    num, direction = map(int, input().split())
+    num = num - 1
+
+    # 회전한 번호, 적용할 번호, 방향(움직일 조건이 된다면)
+    q = deque([[num, num - 1, -direction], [num, num + 1, -direction]])
+    rotation_log = [(num, direction)]
+    while q:
+        from_num, cur_num, cur_direction = q.popleft()
+
+        if cur_num < 0 or cur_num > 3:
+            continue
+
+        if from_num > cur_num:  # 검사할 바퀴가 왼쪽에 있음.
+            if wheels[from_num][6] != wheels[cur_num][2]:
+                rotation_log.append((cur_num, cur_direction))
+                q.append([cur_num, cur_num - 1, -cur_direction])
+        elif from_num < cur_num:  # 검사할 바퀴가 오른쪽에 있음.
+            if wheels[from_num][2] != wheels[cur_num][6]:
+                rotation_log.append((cur_num, cur_direction))
+                q.append([cur_num, cur_num + 1, -cur_direction])
+
+    for target_num, direction in rotation_log:
+        rotate_wheel(target_num, direction)
+
+print(get_score())
