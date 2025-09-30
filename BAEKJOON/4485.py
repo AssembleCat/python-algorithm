@@ -1,34 +1,35 @@
-for case in range(1, 4):
+import heapq as hq
+
+INF = 2 ** 31 - 1
+
+
+def in_range(x, y):
+    return 0 <= x < N and 0 <= y < N
+
+
+case = 0
+while True:
+    case += 1
     N = int(input())
-    minimum_lost = 2 ** 31 - 1
-    visited = [[False] * N for _ in range(N)]
+
+    if N == 0:
+        break
+
+    lost = [[INF] * N for _ in range(N)]
     grid = [list(map(int, input().split())) for _ in range(N)]
     directions = ((0, 1), (0, -1), (1, 0), (-1, 0))
 
+    q = [(grid[0][0], 0, 0)]  # lost, x, y
+    hq.heapify(q)
 
-    def in_range(x, y):
-        return 0 <= x < N and 0 <= y < N
+    while q:
+        curr_lost, x, y = hq.heappop(q)
+        if lost[x][y] > curr_lost:
+            lost[x][y] = curr_lost
 
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+                if in_range(nx, ny):
+                    hq.heappush(q, (curr_lost + grid[nx][ny], nx, ny))
 
-    def dfs(x, y, curr_lost):
-        global minimum_lost
-        if curr_lost > minimum_lost:
-            return
-
-        if (x, y) == (N - 1, N - 1):
-            if curr_lost < minimum_lost:
-                minimum_lost = curr_lost
-            return
-
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if in_range(nx, ny) and not visited[nx][ny]:
-                visited[nx][ny] = True
-                dfs(nx, ny, curr_lost + grid[nx][ny])
-                visited[nx][ny] = False
-
-
-    visited[0][0] = True
-    dfs(0, 0, grid[0][0])
-
-    print(f"Problem {case}: {minimum_lost}")
+    print(f"Problem {case}: {lost[N - 1][N - 1]}")
